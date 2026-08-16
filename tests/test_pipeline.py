@@ -12,9 +12,9 @@ def test_pipeline_recommends_from_similar_users() -> None:
     pipeline = RecommendationPipeline()
     pipeline.train(events)
 
-    recommendations = pipeline.recommend("u1", k=3)
-    assert recommendations
-    assert recommendations[0]["market_id"] == "m3"
+    recommendations = pipeline.recommend("u1", k=1)
+    assert [item["market_id"] for item in recommendations] == ["m3"]
+    assert recommendations[0]["score"] > 0
 
 
 def test_pipeline_fallback_for_new_user_uses_popularity() -> None:

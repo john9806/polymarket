@@ -46,7 +46,11 @@ def fetch_bets_from_file(path: str | Path) -> list[BetEvent]:
 def fetch_bets_from_url(url: str, timeout: float = 10.0) -> list[BetEvent]:
     response = requests.get(url, timeout=timeout)
     response.raise_for_status()
-    return _parse_events(response.json())
+    try:
+        payload = response.json()
+    except ValueError as exc:
+        raise ValueError(f"Invalid JSON payload from {url}") from exc
+    return _parse_events(payload)
 
 
 def gather_bets(path: str | Path | None = None, url: str | None = None) -> list[BetEvent]:

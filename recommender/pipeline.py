@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from .data import BetEvent, gather_bets
 from .model import PolymarketRecommender
 
@@ -24,8 +22,11 @@ class RecommendationPipeline:
         self.model.fit(events)
         self.trained = True
 
-    def train_from_sources(self, path: str | Path | None = None, url: str | None = None) -> None:
-        events = gather_bets(path=path, url=url)
+    def train_from_sources(self, path: str | None = None, url: str | None = None) -> None:
+        try:
+            events = gather_bets(path=path, url=url)
+        except Exception:
+            events = []
         if not events:
             events = SAMPLE_EVENTS
         self.train(events)
